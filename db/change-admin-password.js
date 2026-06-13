@@ -12,12 +12,12 @@ async function changePassword() {
       [hash, username]
     );
     if (result.rows.length === 0) {
-      console.log(Không tìm thấy tài khoản '${username}'.);
+      console.log('Khong tim thay tai khoan: ' + username);
     } else {
-      console.log(Đã đổi mật khẩu cho '${username}' thành công.);
+      console.log('Da doi mat khau cho tai khoan ' + username + ' thanh cong.');
     }
   } catch (err) {
-    console.error('Lỗi:', err);
+    console.error('Loi:', err);
   } finally {
     await pool.end();
   }
