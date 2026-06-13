@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MILI-HUB — Cộng đồng</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-shell">
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="seal"><span class="seal-mono">MH</span></div>
+      <div>
+        <span class="brand-name">MILI-HUB</span>
+        <span class="brand-slogan">MỘT CHẠM KẾT NỐI</span>
+      </div>
+    </div>
+    <nav class="nav-links" id="mh-nav"></nav>
+    <div class="user-chip" id="mh-user-chip"></div>
+    <button class="btn-logout" id="mh-logout">Đăng xuất</button>
+  </div>
+</header>
+
+<main class="page-main">
+  <div class="page-header">
+    <div class="eyebrow">PHÂN HỆ 04 — MILI-COMMUNITY</div>
+    <h1>Kinh tế chia sẻ &amp; Hỗ trợ Cộng đồng</h1>
+    <p>Sàn thanh lý đồ dùng ngắn hạn giữa các đợt sinh viên và hộp tìm đồ thất lạc trong khu nội trú.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="market">Mili-Market</button>
+    <button class="tab-btn" data-tab="lostfound">Lost &amp; Found</button>
+  </div>
+
+  <!-- =================== TAB: MILI-MARKET =================== -->
+  <div class="tab-panel active" id="panel-market">
+    <div class="section">
+      <h2 class="section-title">Đăng đồ thanh lý</h2>
+      <div class="card">
+        <div id="market-alert"></div>
+        <form id="market-form">
+          <div class="field-row">
+            <div class="field">
+              <label for="m-title">Tên đồ vật</label>
+              <input type="text" id="m-title" placeholder="VD: Quạt mini Mini Fan" required>
+            </div>
+            <div class="field">
+              <label for="m-price">Giá (VNĐ)</label>
+              <input type="number" id="m-price" min="0" placeholder="VD: 50000">
+            </div>
+          </div>
+          <div class="field">
+            <label for="m-desc">Mô tả</label>
+            <textarea id="m-desc" rows="2" placeholder="Tình trạng, lý do thanh lý..."></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="m-contact">Liên hệ</label>
+              <input type="text" id="m-contact" placeholder="VD: Zalo 09xx hoặc Phòng A1-204">
+            </div>
+            <div class="field">
+              <label for="m-photo">Ảnh sản phẩm</label>
+              <input type="file" id="m-photo" accept="image/*" capture="environment">
+            </div>
+          </div>
+          <img id="m-preview" class="thumb-preview">
+          <button type="submit" class="btn btn-primary mt-2">Đăng bài</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="flex-between" style="margin-bottom: 1rem;">
+        <h2 class="section-title" style="border-bottom:none; margin-bottom:0; padding-bottom:0;">Đang thanh lý</h2>
+        <select id="m-status-filter" style="max-width: 200px;">
+          <option value="available">Còn hàng</option>
+          <option value="sold">Đã bán</option>
+          <option value="">Tất cả</option>
+        </select>
+      </div>
+      <div id="market-list" class="list">
+        <div class="empty-state">Đang tải...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== TAB: LOST & FOUND =================== -->
+  <div class="tab-panel" id="panel-lostfound">
+    <div class="section">
+      <h2 class="section-title">Đăng tin tìm đồ / nhặt được đồ</h2>
+      <div class="card">
+        <div id="lf-alert"></div>
+        <form id="lf-form">
+          <div class="field-row">
+            <div class="field">
+              <label for="lf-type">Loại tin</label>
+              <select id="lf-type" required>
+                <option value="lost">Tôi bị mất đồ</option>
+                <option value="found">Tôi nhặt được đồ</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="lf-name">Tên đồ vật</label>
+              <input type="text" id="lf-name" placeholder="VD: Mũ cối, thẻ sinh viên, ví..." required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="lf-room">Số phòng liên hệ</label>
+              <input type="text" id="lf-room">
+            </div>
+            <div class="field">
+              <label for="lf-photo">Ảnh đồ vật</label>
+              <input type="file" id="lf-photo" accept="image/*" capture="environment">
+            </div>
+          </div>
+          <div class="field">
+            <label for="lf-desc">Mô tả thêm</label>
+            <textarea id="lf-desc" rows="2" placeholder="Đặc điểm nhận dạng, vị trí nhặt/mất..."></textarea>
+          </div>
+          <img id="lf-preview" class="thumb-preview">
+          <button type="submit" class="btn btn-primary mt-2">Đăng tin</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="flex-between" style="margin-bottom: 1rem;">
+        <h2 class="section-title" style="border-bottom:none; margin-bottom:0; padding-bottom:0;">Tin thất lạc</h2>
+        <select id="lf-type-filter" style="max-width: 220px;">
+          <option value="">Tất cả</option>
+          <option value="lost">Đang bị mất</option>
+          <option value="found">Đang được giữ (nhặt được)</option>
+        </select>
+      </div>
+      <div id="lf-list" class="list">
+        <div class="empty-state">Đang tải...</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="app-footer">MILI-HUB · Nền tảng Số hóa &amp; Tiện ích Đời sống Quân sự</footer>
+</body>
+<script src="/js/api.js"></script>
+<script src="/js/community.js"></script>
+</html>

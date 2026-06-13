@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MILI-HUB — Danh bạ Ban chỉ huy</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-shell">
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="seal"><span class="seal-mono">MH</span></div>
+      <div>
+        <span class="brand-name">MILI-HUB</span>
+        <span class="brand-slogan">MỘT CHẠM KẾT NỐI</span>
+      </div>
+    </div>
+    <nav class="nav-links" id="mh-nav"></nav>
+    <div class="user-chip" id="mh-user-chip"></div>
+    <button class="btn-logout" id="mh-logout">Đăng xuất</button>
+  </div>
+</header>
+
+<main class="page-main">
+  <div class="page-header">
+    <div class="eyebrow">PHÂN HỆ 01 — MILITARY WIKI</div>
+    <h1>Danh bạ Ban chỉ huy</h1>
+    <p>Tra cứu thông tin thầy/cô đại đội trưởng, chính trị viên và sơ đồ phân công quản lý theo đại đội, trung đội.</p>
+  </div>
+
+  <div class="section">
+    <div class="flex-between mt-1" style="margin-bottom: 1rem;">
+      <div class="field" style="max-width: 320px; margin-bottom: 0;">
+        <label for="filter-company">Lọc theo đại đội</label>
+        <input type="text" id="filter-company" placeholder="VD: Đại đội 1">
+      </div>
+    </div>
+
+    <div id="officer-list" class="list">
+      <div class="empty-state">Đang tải danh bạ...</div>
+    </div>
+  </div>
+
+  <div class="section hidden" id="admin-section">
+    <h2 class="section-title">Thêm thông tin (Ban quản lý)</h2>
+    <div class="card">
+      <div id="officer-alert"></div>
+      <form id="officer-form">
+        <div class="field-row">
+          <div class="field">
+            <label for="of-name">Họ và tên</label>
+            <input type="text" id="of-name" required>
+          </div>
+          <div class="field">
+            <label for="of-position">Chức vụ</label>
+            <input type="text" id="of-position" placeholder="VD: Đại đội trưởng" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="of-phone">Số điện thoại</label>
+            <input type="tel" id="of-phone">
+          </div>
+          <div class="field">
+            <label for="of-company">Đại đội</label>
+            <input type="text" id="of-company" placeholder="VD: Đại đội 1">
+          </div>
+          <div class="field">
+            <label for="of-platoon">Trung đội</label>
+            <input type="text" id="of-platoon" placeholder="VD: Trung đội 2">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="of-building">Khu nhà</label>
+            <input type="text" id="of-building" placeholder="VD: Nhà A1">
+          </div>
+          <div class="field">
+            <label for="of-note">Ghi chú</label>
+            <input type="text" id="of-note" placeholder="VD: Liên hệ khi cần hỗ trợ đời sống">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Thêm vào danh bạ</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer class="app-footer">MILI-HUB · Nền tảng Số hóa &amp; Tiện ích Đời sống Quân sự</footer>
+</body>
+<script src="/js/api.js"></script>
+<script src="/js/wiki.js"></script>
+</html>

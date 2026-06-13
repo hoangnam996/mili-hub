@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MILI-HUB — Đăng nhập</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="auth-shell">
+  <div class="auth-card">
+    <div class="seal seal-large">
+      <span class="seal-mono">MH</span>
+    </div>
+    <h1 class="auth-title">MILI-HUB</h1>
+    <div class="auth-slogan">MỘT CHẠM KẾT NỐI — TRỌN VẸN MÙA QUÂN SỰ</div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" type="button">Đăng nhập</button>
+      <button class="auth-tab" id="tab-register" type="button">Đăng ký</button>
+    </div>
+
+    <div id="alert-box"></div>
+
+    <!-- FORM ĐĂNG NHẬP -->
+    <form class="auth-form" id="form-login">
+      <div class="field">
+        <label for="login-username">Tên đăng nhập</label>
+        <input type="text" id="login-username" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="login-password">Mật khẩu</label>
+        <input type="password" id="login-password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+      <p class="hint mt-2">Tài khoản Ban quản lý mẫu: <span class="mono">admin / admin123</span></p>
+    </form>
+
+    <!-- FORM ĐĂNG KÝ -->
+    <form class="auth-form hidden" id="form-register">
+      <div class="field">
+        <label for="reg-fullname">Họ và tên</label>
+        <input type="text" id="reg-fullname" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="reg-username">Tên đăng nhập</label>
+          <input type="text" id="reg-username" required>
+        </div>
+        <div class="field">
+          <label for="reg-password">Mật khẩu</label>
+          <input type="password" id="reg-password" required minlength="6">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="reg-company">Đại đội</label>
+          <input type="text" id="reg-company" placeholder="VD: Đại đội 1">
+        </div>
+        <div class="field">
+          <label for="reg-platoon">Trung đội</label>
+          <input type="text" id="reg-platoon" placeholder="VD: Trung đội 3">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="reg-room">Số phòng</label>
+          <input type="text" id="reg-room" placeholder="VD: A1-204" required>
+        </div>
+        <div class="field">
+          <label for="reg-phone">Số điện thoại</label>
+          <input type="tel" id="reg-phone">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Tạo tài khoản</button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>

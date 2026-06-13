@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MILI-HUB — Trực &amp; Nội vụ</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-shell">
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="seal"><span class="seal-mono">MH</span></div>
+      <div>
+        <span class="brand-name">MILI-HUB</span>
+        <span class="brand-slogan">MỘT CHẠM KẾT NỐI</span>
+      </div>
+    </div>
+    <nav class="nav-links" id="mh-nav"></nav>
+    <div class="user-chip" id="mh-user-chip"></div>
+    <button class="btn-logout" id="mh-logout">Đăng xuất</button>
+  </div>
+</header>
+
+<main class="page-main">
+  <div class="page-header">
+    <div class="eyebrow">PHÂN HỆ 02 — MILI-OPERATION</div>
+    <h1>Vận hành &amp; Thi đua</h1>
+    <p>Lịch trực cơm, gác đêm và chấm điểm nội vụ minh bạch với dấu thời gian, vị trí GPS không thể chỉnh sửa.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="schedule">Lịch trực</button>
+    <button class="tab-btn" data-tab="inspection">Chấm điểm nội vụ</button>
+  </div>
+
+  <!-- =================== TAB: LỊCH TRỰC =================== -->
+  <div class="tab-panel active" id="panel-schedule">
+    <div class="section hidden" id="schedule-admin-section">
+      <h2 class="section-title">Tạo lịch trực mới (Ban quản lý)</h2>
+      <div class="card">
+        <div id="schedule-alert"></div>
+        <form id="schedule-form">
+          <div class="field-row">
+            <div class="field">
+              <label for="sch-date">Ngày trực</label>
+              <input type="date" id="sch-date" required>
+            </div>
+            <div class="field">
+              <label for="sch-type">Loại trực</label>
+              <select id="sch-type" required>
+                <option value="truc_com">Trực cơm</option>
+                <option value="gac_dem">Gác đêm</option>
+                <option value="khac">Khác</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="sch-room">Số phòng</label>
+              <input type="text" id="sch-room" placeholder="VD: A1-204" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="sch-assignees">Danh sách người trực</label>
+            <input type="text" id="sch-assignees" placeholder="VD: Nguyễn Văn A, Trần Thị B">
+          </div>
+          <div class="field">
+            <label for="sch-note">Ghi chú</label>
+            <input type="text" id="sch-note">
+          </div>
+          <button type="submit" class="btn btn-primary">Tạo lịch trực</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="flex-between" style="margin-bottom: 1rem;">
+        <h2 class="section-title" style="border-bottom:none; margin-bottom:0; padding-bottom:0;">Danh sách lịch trực</h2>
+        <div class="field-row" style="margin-bottom:0;">
+          <div class="field" style="margin-bottom:0;">
+            <input type="date" id="filter-date">
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <input type="text" id="filter-room" placeholder="Lọc theo số phòng">
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="schedule-table">
+          <thead>
+            <tr>
+              <th>Ngày</th><th>Loại trực</th><th>Phòng</th><th>Người trực</th><th>Ghi chú</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="schedule-tbody">
+            <tr><td colspan="6" class="empty-state">Đang tải lịch trực...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== TAB: CHẤM ĐIỂM NỘI VỤ =================== -->
+  <div class="tab-panel" id="panel-inspection">
+    <div class="section" id="inspection-submit-section">
+      <h2 class="section-title">Nộp ảnh kiểm tra nội vụ</h2>
+      <div class="card">
+        <p class="muted">Chụp ảnh phòng (gấp chăn màn, vệ sinh) — hệ thống sẽ tự động đóng dấu thời gian thực và vị trí GPS, không thể chỉnh sửa.</p>
+        <div id="inspection-alert"></div>
+        <form id="inspection-form">
+          <div class="field">
+            <label for="insp-photo">Chụp ảnh / Chọn ảnh</label>
+            <input type="file" id="insp-photo" accept="image/*" capture="environment" required>
+          </div>
+          <img id="insp-preview" class="thumb-preview">
+          <div class="field mt-2">
+            <label for="insp-room">Số phòng</label>
+            <input type="text" id="insp-room" required>
+          </div>
+          <div class="hint" id="geo-status">Đang xác định vị trí GPS...</div>
+          <button type="submit" class="btn btn-primary mt-2" id="insp-submit-btn">Gửi bài kiểm tra</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title" id="inspection-list-title">Lịch sử kiểm tra của tôi</h2>
+      <div id="inspection-list" class="list">
+        <div class="empty-state">Đang tải...</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="app-footer">MILI-HUB · Nền tảng Số hóa &amp; Tiện ích Đời sống Quân sự</footer>
+</body>
+<script src="/js/api.js"></script>
+<script src="/js/operation.js"></script>
+</html>

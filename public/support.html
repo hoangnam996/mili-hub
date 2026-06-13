@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MILI-HUB — S.O.S Phòng</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-shell">
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="seal"><span class="seal-mono">MH</span></div>
+      <div>
+        <span class="brand-name">MILI-HUB</span>
+        <span class="brand-slogan">MỘT CHẠM KẾT NỐI</span>
+      </div>
+    </div>
+    <nav class="nav-links" id="mh-nav"></nav>
+    <div class="user-chip" id="mh-user-chip"></div>
+    <button class="btn-logout" id="mh-logout">Đăng xuất</button>
+  </div>
+</header>
+
+<main class="page-main">
+  <div class="page-header">
+    <div class="eyebrow">PHÂN HỆ 03 — MILI-SUPPORT</div>
+    <h1>S.O.S Phòng — Báo hỏng 1-Click</h1>
+    <p>Thiết bị phòng (quạt, bóng đèn, vòi nước...) bị hỏng? Gửi báo cáo kèm ảnh, Ban quản lý KTX sẽ xử lý và cập nhật trạng thái cho bạn.</p>
+  </div>
+
+  <div class="section" id="sos-submit-section">
+    <h2 class="section-title">Gửi báo cáo hỏng hóc</h2>
+    <div class="card">
+      <div id="sos-alert"></div>
+      <form id="sos-form">
+        <div class="field-row">
+          <div class="field">
+            <label for="sos-device">Thiết bị bị hỏng</label>
+            <input type="text" id="sos-device" placeholder="VD: Quạt trần, vòi nước, bóng đèn..." required>
+          </div>
+          <div class="field">
+            <label for="sos-room">Số phòng</label>
+            <input type="text" id="sos-room" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="sos-desc">Mô tả tình trạng</label>
+          <textarea id="sos-desc" rows="3" placeholder="VD: Quạt trần không quay, có tiếng kêu lạ"></textarea>
+        </div>
+        <div class="field">
+          <label for="sos-photo">Ảnh minh hoạ (tuỳ chọn)</label>
+          <input type="file" id="sos-photo" accept="image/*" capture="environment">
+        </div>
+        <img id="sos-preview" class="thumb-preview">
+        <button type="submit" class="btn btn-primary mt-2" id="sos-submit-btn">Gửi báo cáo</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="flex-between" style="margin-bottom: 1rem;">
+      <h2 class="section-title" id="sos-list-title" style="border-bottom:none; margin-bottom:0; padding-bottom:0;">Báo cáo của tôi</h2>
+      <div class="field-row" style="margin-bottom:0;" id="sos-filter-wrap">
+        <select id="sos-status-filter" style="max-width: 200px;">
+          <option value="">Tất cả trạng thái</option>
+          <option value="pending">Đang chờ xử lý</option>
+          <option value="completed">Đã hoàn thành</option>
+        </select>
+      </div>
+    </div>
+    <div id="sos-list" class="list">
+      <div class="empty-state">Đang tải...</div>
+    </div>
+  </div>
+</main>
+
+<footer class="app-footer">MILI-HUB · Nền tảng Số hóa &amp; Tiện ích Đời sống Quân sự</footer>
+</body>
+<script src="/js/api.js"></script>
+<script src="/js/support.js"></script>
+</html>
