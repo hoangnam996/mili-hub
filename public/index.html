@@ -33,7 +33,32 @@
         <input type="password" id="login-password" required autocomplete="current-password">
       </div>
       <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+    
+      <p class="hint mt-2"><a href="#" id="link-forgot-password">Quên mật khẩu?</a></p>
     </form>
+    <!-- FORM QUÊN MẬT KHẨU -->
+    <form class="auth-form hidden" id="form-forgot">
+      <p class="hint mb-2">Nhập tên đăng nhập và số điện thoại đã đăng ký để đặt lại mật khẩu mới.</p>
+      <div class="field">
+        <label for="forgot-username">Tên đăng nhập</label>
+        <input type="text" id="forgot-username" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="forgot-phone">Số điện thoại đã đăng ký</label>
+        <input type="tel" id="forgot-phone" required>
+      </div>
+      <div class="field">
+        <label for="forgot-new-password">Mật khẩu mới</label>
+        <input type="password" id="forgot-new-password" required minlength="6" autocomplete="new-password">
+      </div>
+      <div class="field">
+        <label for="forgot-confirm-password">Nhập lại mật khẩu mới</label>
+        <input type="password" id="forgot-confirm-password" required minlength="6" autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Đặt lại mật khẩu</button>
+      <p class="hint mt-2"><a href="#" id="link-back-to-login">&larr; Quay lại đăng nhập</a></p>
+    </form>
+
 
     <!-- FORM ĐĂNG KÝ -->
     <form class="auth-form hidden" id="form-register">

@@ -1,4 +1,3 @@
-// Nếu đã đăng nhập rồi -> chuyển thẳng vào dashboard
 if (MH.isLoggedIn()) {
   window.location.href = '/dashboard.html';
 }
@@ -7,6 +6,9 @@ const tabLogin = document.getElementById('tab-login');
 const tabRegister = document.getElementById('tab-register');
 const formLogin = document.getElementById('form-login');
 const formRegister = document.getElementById('form-register');
+const formForgot = document.getElementById('form-forgot');
+const linkForgotPassword = document.getElementById('link-forgot-password');
+const linkBackToLogin = document.getElementById('link-back-to-login');
 const alertBox = document.getElementById('alert-box');
 
 function showAlert(message, type = 'error') {
@@ -14,20 +16,25 @@ function showAlert(message, type = 'error') {
 }
 function clearAlert() { alertBox.innerHTML = ''; }
 
-tabLogin.addEventListener('click', () => {
-  tabLogin.classList.add('active');
-  tabRegister.classList.remove('active');
-  formLogin.classList.remove('hidden');
-  formRegister.classList.add('hidden');
+function showForm(target) {
+  const forms = { login: formLogin, register: formRegister, forgot: formForgot };
+  Object.entries(forms).forEach(([key, form]) => {
+    form.classList.toggle('hidden', key !== target);
+  });
+  tabLogin.classList.toggle('active', target !== 'register');
+  tabRegister.classList.toggle('active', target === 'register');
   clearAlert();
-});
+}
 
-tabRegister.addEventListener('click', () => {
-  tabRegister.classList.add('active');
-  tabLogin.classList.remove('active');
-  formRegister.classList.remove('hidden');
-  formLogin.classList.add('hidden');
-  clearAlert();
+tabLogin.addEventListener('click', () => showForm('login'));
+tabRegister.addEventListener('click', () => showForm('register'));
+linkForgotPassword.addEventListener('click', (e) => {
+  e.preventDefault();
+  showForm('forgot');
+});
+linkBackToLogin.addEventListener('click', (e) => {
+  e.preventDefault();
+  showForm('login');
 });
 
 formLogin.addEventListener('submit', async (e) => {
@@ -35,10 +42,8 @@ formLogin.addEventListener('submit', async (e) => {
   clearAlert();
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
-
   const submitBtn = formLogin.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
-
   try {
     const data = await MH.api('/auth/login', {
       method: 'POST',
@@ -56,7 +61,6 @@ formLogin.addEventListener('submit', async (e) => {
 formRegister.addEventListener('submit', async (e) => {
   e.preventDefault();
   clearAlert();
-
   const payload = {
     full_name: document.getElementById('reg-fullname').value.trim(),
     username: document.getElementById('reg-username').value.trim(),
@@ -66,10 +70,8 @@ formRegister.addEventListener('submit', async (e) => {
     room_number: document.getElementById('reg-room').value.trim(),
     phone: document.getElementById('reg-phone').value.trim(),
   };
-
   const submitBtn = formRegister.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
-
   try {
     const data = await MH.api('/auth/register', {
       method: 'POST',
@@ -77,6 +79,40 @@ formRegister.addEventListener('submit', async (e) => {
     });
     MH.setSession(data.token, data.user);
     window.location.href = '/dashboard.html';
+  } catch (err) {
+    showAlert(err.message);
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
+
+formForgot.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearAlert();
+  const username = document.getElementById('forgot-username').value.trim();
+  const phone = document.getElementById('forgot-phone').value.trim();
+  const newPassword = document.getElementById('forgot-new-password').value;
+  const confirmPassword = document.getElementById('forgot-confirm-password').value;
+
+  if (newPassword !== confirmPassword) {
+    showAlert('Mật khẩu mới và mật khẩu nhập lại không khớp.');
+    return;
+  }
+  if (newPassword.length < 6) {
+    showAlert('Mật khẩu mới phải có ít nhất 6 ký tự.');
+    return;
+  }
+
+  const submitBtn = formForgot.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  try {
+    const data = await MH.api('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ username, phone, new_password: newPassword })
+    });
+    formForgot.reset();
+    showForm('login');
+    showAlert(data.message || 'Đã đặt lại mật khẩu thành công. Vui lòng đăng nhập lại.', 'success');
   } catch (err) {
     showAlert(err.message);
   } finally {
