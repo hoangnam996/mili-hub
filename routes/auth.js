@@ -11,8 +11,8 @@ router.post('/register', async (req, res) => {
   try {
     const { username, password, full_name, company, platoon, room_number, phone } = req.body;
 
-    if (!username || !password || !full_name) {
-      return res.status(400).json({ error: 'Vui lòng nhập đầy đủ tên đăng nhập, mật khẩu và họ tên.' });
+    if (!username || !password || !full_name || !company || !platoon || !room_number || !phone) {
+      return res.status(400).json({ error: 'Vui lòng nhập đầy đủ tất cả các trường: họ tên, tên đăng nhập, mật khẩu, đại đội, trung đội, số phòng và số điện thoại.' });
     }
     if (password.length < 6) {
       return res.status(400).json({ error: 'Mật khẩu phải có ít nhất 6 ký tự.' });
