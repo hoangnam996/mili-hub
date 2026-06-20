@@ -45,7 +45,10 @@ router.post('/schedules', requireAuth, requireAdmin, async (req, res) => {
 // DELETE /api/operation/schedules/:id - Xoá lịch trực (chỉ admin)
 router.delete('/schedules/:id', requireAuth, requireAdmin, async (req, res) => {
   try {
-    await pool.query('DELETE FROM duty_schedules WHERE id = $1', [req.params.id]);
+    const result = await pool.query('DELETE FROM duty_schedules WHERE id = $1 RETURNING id', [req.params.id]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy lịch trực cần xoá.' });
+    }
     res.json({ success: true });
   } catch (err) {
     console.error(err);
