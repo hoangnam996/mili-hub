@@ -11,8 +11,8 @@ router.post('/register', async (req, res) => {
   try {
     const { username, password, full_name, company, platoon, room_number, phone } = req.body;
 
-    if (!username || !password || !full_name || !company || !platoon || !room_number || !phone) {
-      return res.status(400).json({ error: 'Vui lòng nhập đầy đủ tất cả các trường: họ tên, tên đăng nhập, mật khẩu, đại đội, trung đội, số phòng và số điện thoại.' });
+    if (!username || !password || !full_name) {
+      return res.status(400).json({ error: 'Vui lòng nhập đầy đủ tên đăng nhập, mật khẩu và họ tên.' });
     }
     if (password.length < 6) {
       return res.status(400).json({ error: 'Mật khẩu phải có ít nhất 6 ký tự.' });
@@ -32,6 +32,10 @@ router.post('/register', async (req, res) => {
     );
 
     const user = result.rows[0];
+
+    // Ghi nhận lượt truy cập đầu tiên (đăng ký = bắt đầu 1 phiên đăng nhập)
+    await pool.query('INSERT INTO login_sessions (user_id) VALUES ($1)', [user.id]);
+
     const token = jwt.sign(
       { id: user.id, username: user.username, full_name: user.full_name, role: user.role, room_number: user.room_number, company: user.company, platoon: user.platoon },
       JWT_SECRET,
@@ -64,6 +68,9 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Tên đăng nhập hoặc mật khẩu không đúng.' });
     }
 
+    // Ghi nhận lượt đăng nhập mới (phục vụ thống kê truy cập)
+    await pool.query('INSERT INTO login_sessions (user_id) VALUES ($1)', [user.id]);
+
     const token = jwt.sign(
       { id: user.id, username: user.username, full_name: user.full_name, role: user.role, room_number: user.room_number, company: user.company, platoon: user.platoon },
       JWT_SECRET,
@@ -75,47 +82,6 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Lỗi server khi đăng nhập.' });
-  }
-});
-
-// POST /api/auth/forgot-password - Quên mật khẩu: xác minh username + SĐT rồi đặt mật khẩu mới
-router.post('/forgot-password', async (req, res) => {
-  try {
-    const { username, phone, new_password } = req.body;
-
-    if (!username || !phone || !new_password) {
-      return res.status(400).json({ error: 'Vui lòng nhập đầy đủ tên đăng nhập, số điện thoại và mật khẩu mới.' });
-    }
-    if (new_password.length < 6) {
-      return res.status(400).json({ error: 'Mật khẩu mới phải có ít nhất 6 ký tự.' });
-    }
-
-    const result = await pool.query(
-      'SELECT id, phone FROM users WHERE username = $1',
-      [username.trim()]
-    );
-
-    const genericError = 'Tên đăng nhập hoặc số điện thoại không khớp với hồ sơ đã đăng ký.';
-
-    if (result.rows.length === 0) {
-      return res.status(400).json({ error: genericError });
-    }
-
-    const user = result.rows[0];
-    const storedPhone = (user.phone || '').trim();
-    const inputPhone = phone.trim();
-
-    if (!storedPhone || storedPhone !== inputPhone) {
-      return res.status(400).json({ error: genericError });
-    }
-
-    const hash = await bcrypt.hash(new_password, 10);
-    await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [hash, user.id]);
-
-    res.json({ success: true, message: 'Đã đặt lại mật khẩu thành công. Vui lòng đăng nhập lại.' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Lỗi server khi đặt lại mật khẩu.' });
   }
 });
 

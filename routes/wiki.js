@@ -1,9 +1,7 @@
 const express = require('express');
 const pool = require('../config/db');
 const { requireAuth, requireAdmin } = require('../middleware/auth');
-
 const router = express.Router();
-
 // GET /api/wiki/officers - Lấy danh bạ Ban chỉ huy (có thể lọc theo đại đội)
 router.get('/officers', requireAuth, async (req, res) => {
   try {
@@ -23,7 +21,6 @@ router.get('/officers', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Lỗi server khi tải danh bạ.' });
   }
 });
-
 // POST /api/wiki/officers - Thêm thông tin thầy/cô (chỉ admin)
 router.post('/officers', requireAuth, requireAdmin, async (req, res) => {
   try {
@@ -42,16 +39,17 @@ router.post('/officers', requireAuth, requireAdmin, async (req, res) => {
     res.status(500).json({ error: 'Lỗi server khi thêm thông tin.' });
   }
 });
-
 // DELETE /api/wiki/officers/:id - Xoá thông tin (chỉ admin)
 router.delete('/officers/:id', requireAuth, requireAdmin, async (req, res) => {
   try {
-    await pool.query('DELETE FROM officers WHERE id = $1', [req.params.id]);
+    const result = await pool.query('DELETE FROM officers WHERE id = $1 RETURNING id', [req.params.id]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy cán bộ cần xoá.' });
+    }
     res.json({ success: true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Lỗi server khi xoá.' });
   }
 });
-
 module.exports = router;

@@ -27,7 +27,6 @@ const MH = {
     return u && u.role === 'admin';
   },
 
-  // Gọi API kèm Authorization header. Tự động redirect về trang đăng nhập nếu hết hạn.
   async api(path, options = {}) {
     const headers = Object.assign({ 'Content-Type': 'application/json' }, options.headers || {});
     const token = this.getToken();
@@ -48,14 +47,12 @@ const MH = {
     return data;
   },
 
-  // Bắt buộc đăng nhập mới được xem trang
   requireAuth() {
     if (!this.isLoggedIn()) {
       window.location.href = '/index.html';
     }
   },
 
-  // Đọc file ảnh thành base64 (dùng cho upload ảnh)
   fileToBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -65,20 +62,17 @@ const MH = {
     });
   },
 
-  // Định dạng tiền VNĐ
   formatVND(value) {
     const n = Number(value || 0);
     return n.toLocaleString('vi-VN') + ' đ';
   },
 
-  // Định dạng ngày giờ kiểu Việt Nam
   formatDateTime(value) {
     if (!value) return '—';
     const d = new Date(value);
     return d.toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' });
   },
 
-  // Vẽ thanh điều hướng dùng chung. `active` = tên trang hiện tại.
   renderNav(active) {
     const user = this.getUser();
     if (!user) return;
@@ -93,6 +87,10 @@ const MH = {
       { key: 'support', href: '/support.html', label: 'S.O.S Phòng' },
       { key: 'community', href: '/community.html', label: 'Cộng đồng' },
     ];
+
+    if (user.role === 'admin') {
+      links.push({ key: 'stats', href: '/stats.html', label: 'Thống kê' });
+    }
 
     navEl.innerHTML = links.map(l =>
       `<a href="${l.href}" class="${l.key === active ? 'active' : ''}">${l.label}</a>`

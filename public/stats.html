@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MILI-HUB — Thống kê truy cập</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app-shell">
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="seal"><span class="seal-mono">MH</span></div>
+      <div>
+        <span class="brand-name">MILI-HUB</span>
+        <span class="brand-slogan">MỘT CHẠM KẾT NỐI</span>
+      </div>
+    </div>
+    <nav class="nav-links" id="mh-nav"></nav>
+    <div class="user-chip" id="mh-user-chip"></div>
+    <button class="btn-logout" id="mh-logout">Đăng xuất</button>
+  </div>
+</header>
+
+<main class="page-main">
+  <div class="page-header">
+    <div class="eyebrow">CHỈ ADMIN</div>
+    <h1>Thống kê truy cập hệ thống</h1>
+    <p>Số lượng tài khoản, lượt đăng nhập và thời gian tương tác trung bình của người dùng trên MILI-HUB.</p>
+  </div>
+
+  <div class="kpi-grid" id="kpi-grid">
+    <div class="kpi-card"><div class="kpi-value">—</div><div class="kpi-label">Tổng tài khoản</div></div>
+    <div class="kpi-card"><div class="kpi-value">—</div><div class="kpi-label">Tổng lượt đăng nhập</div></div>
+    <div class="kpi-card"><div class="kpi-value">—</div><div class="kpi-label">Lượt đăng nhập hôm nay</div></div>
+    <div class="kpi-card"><div class="kpi-value">—</div><div class="kpi-label">TB phút tương tác/lượt</div></div>
+    <div class="kpi-card"><div class="kpi-value">—</div><div class="kpi-label">Đang hoạt động (5 phút)</div></div>
+  </div>
+
+  <div class="section mt-2">
+    <div class="card">
+      <h3>Cách tính</h3>
+      <p class="muted mt-1">Mỗi lần đăng nhập (hoặc đăng ký) tạo ra 1 "lượt truy cập" mới. Mỗi khi người dùng tải trang hoặc gọi API (xem danh bạ, nộp ảnh, đăng bài...), hệ thống cập nhật lại "thời điểm hoạt động gần nhất" của lượt đó. Thời gian tương tác mỗi lượt = thời điểm hoạt động gần nhất − thời điểm đăng nhập.</p>
+    </div>
+  </div>
+</main>
+
+<footer class="app-footer">MILI-HUB · Nền tảng Số hóa &amp; Tiện ích Đời sống Quân sự</footer>
+</body>
+<script src="/js/api.js"></script>
+<script src="/js/stats.js"></script>
+</html>

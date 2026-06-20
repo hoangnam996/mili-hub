@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const pool = require('../config/db');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'mili-hub-dev-secret-change-me';
 
@@ -14,6 +15,14 @@ function requireAuth(req, res, next) {
   try {
     const payload = jwt.verify(token, JWT_SECRET);
     req.user = payload; // { id, username, full_name, role, room_number, company, platoon }
+
+    // Cập nhật thời gian hoạt động gần nhất của lượt đăng nhập hiện tại (phục vụ thống kê truy cập)
+    pool.query(
+      `UPDATE login_sessions SET last_activity_at = NOW()
+       WHERE id = (SELECT id FROM login_sessions WHERE user_id = $1 ORDER BY login_at DESC LIMIT 1)`,
+      [payload.id]
+    ).catch(err => console.error('Lỗi cập nhật last_activity_at:', err));
+
     next();
   } catch (err) {
     return res.status(401).json({ error: 'Token không hợp lệ hoặc đã hết hạn.' });

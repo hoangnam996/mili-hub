@@ -95,3 +95,14 @@ CREATE TABLE IF NOT EXISTS lost_found (
 );
 
 -- Tài khoản admin mẫu (mật khẩu: admin123 -> được tạo qua seed.js, không insert thẳng hash ở đây)
+
+-- Theo dõi lượt đăng nhập + thời gian hoạt động (phục vụ thống kê truy cập)
+CREATE TABLE IF NOT EXISTS login_sessions (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    login_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    last_activity_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_login_sessions_user_id ON login_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_login_sessions_login_at ON login_sessions(login_at);
