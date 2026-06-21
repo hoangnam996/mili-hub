@@ -11,9 +11,15 @@ router.get('/market', requireAuth, async (req, res) => {
   try {
     const { status } = req.query;
     let query = `SELECT m.*, u.full_name, u.room_number AS seller_room
-                  FROM market_listings m JOIN users u ON u.id = m.user_id WHERE 1=1`;
+                  FROM market_listings m JOIN users u ON u.id = m.user_id`;
     const params = [];
-    if (status) { params.push(status); query += ` AND m.status = $${params.length}`; }
+    if (status === 'all') {
+      // Cố ý xem tất cả (cả đã bán) -> không lọc
+    } else {
+      // Mặc định (không truyền status, hoặc truyền 'available'/'sold'): luôn lọc theo status
+      params.push(status || 'available');
+      query += ` WHERE m.status = $${params.length}`;
+    }
     query += ' ORDER BY m.created_at DESC';
     const result = await pool.query(query, params);
     res.json(result.rows);
