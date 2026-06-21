@@ -28,6 +28,9 @@ router.post('/market', requireAuth, async (req, res) => {
   try {
     const { title, description, price, image_data, contact } = req.body;
     if (!title) return res.status(400).json({ error: 'Vui lòng nhập tên đồ cần thanh lý.' });
+    if (!contact || !/^[0-9]{10}$/.test(contact)) {
+      return res.status(400).json({ error: 'Vui lòng nhập số điện thoại liên hệ gồm đúng 10 số.' });
+    }
     const result = await pool.query(
       `INSERT INTO market_listings (user_id, title, description, price, image_data, contact)
        VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,

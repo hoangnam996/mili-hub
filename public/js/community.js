@@ -47,6 +47,12 @@ marketPhoto.addEventListener('change', () => {
 
 marketStatusFilter.addEventListener('change', loadMarket);
 
+const marketPrice = document.getElementById('m-price');
+marketPrice.addEventListener('input', () => {
+  const digits = marketPrice.value.replace(/\D/g, '');
+  marketPrice.value = digits ? Number(digits).toLocaleString('vi-VN') : '';
+});
+
 marketForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   marketAlert.innerHTML = '';
@@ -60,7 +66,7 @@ marketForm.addEventListener('submit', async (e) => {
 
     const payload = {
       title: document.getElementById('m-title').value.trim(),
-      price: document.getElementById('m-price').value || 0,
+      price: Number(document.getElementById('m-price').value.replace(/\D/g, '')) || 0,
       description: document.getElementById('m-desc').value.trim(),
       contact: document.getElementById('m-contact').value.trim(),
       image_data,
