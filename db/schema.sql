@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS inspections (
     longitude DOUBLE PRECISION,
     captured_at TIMESTAMP NOT NULL DEFAULT NOW(), -- dấu thời gian server (không thể chỉnh sửa)
     status VARCHAR(20) NOT NULL DEFAULT 'pending', -- 'pending' | 'scored'
-    score INTEGER,
+    score NUMERIC(4,2) CHECK (score >= 0 AND score <= 10),
     scored_by INTEGER REFERENCES users(id),
     scored_at TIMESTAMP
 );

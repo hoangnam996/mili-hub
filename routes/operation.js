@@ -118,10 +118,14 @@ router.put('/inspections/:id/score', requireAuth, requireAdmin, async (req, res)
     if (score === undefined || score === null || isNaN(Number(score))) {
       return res.status(400).json({ error: 'Vui lòng nhập điểm hợp lệ.' });
     }
+    const scoreNum = Number(score);
+    if (scoreNum < 0 || scoreNum > 10) {
+      return res.status(400).json({ error: 'Điểm phải nằm trong khoảng từ 0 đến 10.' });
+    }
     const result = await pool.query(
       `UPDATE inspections SET score = $1, status = 'scored', scored_by = $2, scored_at = NOW()
        WHERE id = $3 RETURNING id, room_number, status, score, scored_at`,
-      [Number(score), req.user.id, req.params.id]
+      [scoreNum, req.user.id, req.params.id]
     );
     if (result.rows.length === 0) return res.status(404).json({ error: 'Không tìm thấy bài kiểm tra.' });
     res.json(result.rows[0]);

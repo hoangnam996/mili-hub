@@ -219,7 +219,7 @@ function renderInspections(rows) {
           ${isAdmin && r.status === 'pending' ? `
             <div class="field-row mt-1" style="align-items: flex-end;">
               <div class="field" style="max-width: 120px; margin-bottom:0;">
-                <input type="number" min="0" max="10" placeholder="Điểm" id="score-${r.id}">
+                <input type="number" min="0" max="10" step="0.01" placeholder="Điểm" id="score-${r.id}">
               </div>
               <button class="btn btn-gold btn-sm" onclick="submitScore(${r.id})">Chấm điểm</button>
             </div>

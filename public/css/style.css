@@ -545,3 +545,23 @@ footer.app-footer {
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+
+/* Ẩn mũi tên tăng/giảm mặc định của ô nhập điểm (chỉ gõ bàn phím) */
+input[id^="score-"]::-webkit-outer-spin-button,
+input[id^="score-"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[id^="score-"] {
+  -moz-appearance: textfield;
+}
+
+/* Ẩn mũi tên tăng/giảm mặc định của ô giá tiền Mili-Market */
+#m-price::-webkit-outer-spin-button,
+#m-price::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+#m-price {
+  -moz-appearance: textfield;
+}
