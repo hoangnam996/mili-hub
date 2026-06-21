@@ -103,4 +103,38 @@ router.get('/me', requireAuth, async (req, res) => {
   }
 });
 
+// PUT /api/auth/profile - Cập nhật hồ sơ cá nhân (số phòng, SĐT, đại đội, trung đội)
+router.put('/profile', requireAuth, async (req, res) => {
+  try {
+    const { room_number, phone, company, platoon } = req.body;
+
+    if (phone && !/^[0-9]{10}$/.test(phone)) {
+      return res.status(400).json({ error: 'Số điện thoại phải gồm đúng 10 số.' });
+    }
+
+    const result = await pool.query(
+      `UPDATE users SET
+         room_number = COALESCE($1, room_number),
+         phone = COALESCE($2, phone),
+         company = COALESCE($3, company),
+         platoon = COALESCE($4, platoon)
+       WHERE id = $5
+       RETURNING id, username, full_name, role, company, platoon, room_number, phone`,
+      [room_number || null, phone || null, company || null, platoon || null, req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy người dùng.' });
+    }
+
+    res.json({
+      user: result.rows[0],
+      message: 'Cập nhật hồ sơ thành công. Vui lòng đăng nhập lại để áp dụng đầy đủ thông tin mới.'
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi server khi cập nhật hồ sơ.' });
+  }
+});
+
 module.exports = router;

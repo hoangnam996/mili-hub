@@ -58,6 +58,37 @@
       <p class="muted mt-1">Sinh viên có thể nộp ảnh chấm điểm nội vụ, gửi báo cáo hỏng hóc hoặc đăng tin lên sàn thanh lý ngay từ các phân hệ phía trên. Ban quản lý có thêm quyền tạo lịch trực, chấm điểm và quản lý danh bạ.</p>
     </div>
   </div>
+
+  <div class="section mt-2">
+    <div class="card">
+      <h3>Cập nhật hồ sơ cá nhân</h3>
+      <p class="muted mt-1">Đổi số phòng, số điện thoại, đại đội hoặc trung đội khi có thay đổi. Sau khi lưu, bạn cần đăng nhập lại để hệ thống áp dụng đầy đủ thông tin mới.</p>
+      <form id="profile-form" class="mt-2">
+        <div class="field-row">
+          <div class="field">
+            <label for="pf-room">Số phòng</label>
+            <input type="text" id="pf-room" placeholder="VD: A1-204">
+          </div>
+          <div class="field">
+            <label for="pf-phone">Số điện thoại</label>
+            <input type="tel" id="pf-phone" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="VD: 0987654321">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="pf-company">Đại đội</label>
+            <input type="text" id="pf-company" placeholder="VD: 1">
+          </div>
+          <div class="field">
+            <label for="pf-platoon">Trung đội</label>
+            <input type="text" id="pf-platoon" placeholder="VD: 75DCTT21">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+      </form>
+      <div id="profile-alert" class="mt-1"></div>
+    </div>
+  </div>
 </main>
 
 <footer class="app-footer">MILI-HUB · Nền tảng Số hóa &amp; Tiện ích Đời sống Quân sự</footer>
