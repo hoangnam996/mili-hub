@@ -1,6 +1,10 @@
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
 
+if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
+  throw new Error('JWT_SECRET chưa được thiết lập trong môi trường production. Vui lòng đặt biến môi trường JWT_SECRET trước khi khởi động server.');
+}
+
 const JWT_SECRET = process.env.JWT_SECRET || 'mili-hub-dev-secret-change-me';
 
 // Xác thực người dùng đã đăng nhập (mọi role)
