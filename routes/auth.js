@@ -17,6 +17,9 @@ router.post('/register', async (req, res) => {
     if (password.length < 6) {
       return res.status(400).json({ error: 'Mật khẩu phải có ít nhất 6 ký tự.' });
     }
+    if (!phone || !/^[0-9]{10}$/.test(phone)) {
+      return res.status(400).json({ error: 'Vui lòng nhập số điện thoại gồm đúng 10 số.' });
+    }
 
     const existing = await pool.query('SELECT id FROM users WHERE username = $1', [username]);
     if (existing.rows.length > 0) {
@@ -28,7 +31,7 @@ router.post('/register', async (req, res) => {
       `INSERT INTO users (username, password_hash, full_name, role, company, platoon, room_number, phone)
        VALUES ($1, $2, $3, 'student', $4, $5, $6, $7)
        RETURNING id, username, full_name, role, company, platoon, room_number, phone`,
-      [username, hash, full_name, company || null, platoon || null, room_number || null, phone || null]
+      [username, hash, full_name, company || null, platoon || null, room_number || null, phone]
     );
 
     const user = result.rows[0];
