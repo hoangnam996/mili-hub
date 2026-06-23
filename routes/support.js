@@ -54,15 +54,37 @@ router.post('/reports', requireAuth, async (req, res) => {
   }
 });
 
+// PUT /api/support/reports/:id/start - Ban quản lý đánh dấu đang xử lý
+router.put('/reports/:id/start', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const check = await pool.query('SELECT status FROM sos_reports WHERE id = $1', [req.params.id]);
+    if (check.rows.length === 0) return res.status(404).json({ error: 'Không tìm thấy báo cáo.' });
+    if (check.rows[0].status !== 'pending') {
+      return res.status(400).json({ error: 'Chỉ có thể bắt đầu xử lý báo cáo đang ở trạng thái chờ xử lý.' });
+    }
+    const result = await pool.query(
+      `UPDATE sos_reports SET status = 'in_progress' WHERE id = $1 RETURNING *`,
+      [req.params.id]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi server khi cập nhật.' });
+  }
+});
+
 // PUT /api/support/reports/:id/complete - Ban quản lý đánh dấu hoàn thành
 router.put('/reports/:id/complete', requireAuth, requireAdmin, async (req, res) => {
   try {
+    const check = await pool.query('SELECT status FROM sos_reports WHERE id = $1', [req.params.id]);
+    if (check.rows.length === 0) return res.status(404).json({ error: 'Không tìm thấy báo cáo.' });
+    if (check.rows[0].status === 'completed') {
+      return res.status(400).json({ error: 'Báo cáo này đã được xử lý hoàn thành trước đó.' });
+    }
     const result = await pool.query(
-      `UPDATE sos_reports SET status = 'completed', completed_at = NOW()
-       WHERE id = $1 RETURNING *`,
+      `UPDATE sos_reports SET status = 'completed', completed_at = NOW() WHERE id = $1 RETURNING *`,
       [req.params.id]
     );
-    if (result.rows.length === 0) return res.status(404).json({ error: 'Không tìm thấy báo cáo.' });
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);

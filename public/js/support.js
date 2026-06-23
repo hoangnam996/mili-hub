@@ -86,6 +86,12 @@ async function loadReports() {
   }
 }
 
+const statusLabels = {
+  pending: { pill: 'pill-pending', label: 'Đang chờ xử lý' },
+  in_progress: { pill: 'pill-progress', label: 'Đang xử lý' },
+  completed: { pill: 'pill-completed', label: 'Đã hoàn thành' },
+};
+
 function renderReports(rows) {
   if (rows.length === 0) {
     sosListEl.innerHTML = '<div class="empty-state">Chưa có báo cáo nào.</div>';
@@ -93,9 +99,16 @@ function renderReports(rows) {
   }
 
   sosListEl.innerHTML = rows.map(r => {
-    const pillClass = r.status === 'completed' ? 'pill-completed' : 'pill-pending';
-    const pillLabel = r.status === 'completed' ? 'Đã hoàn thành' : 'Đang chờ xử lý';
+    const info = statusLabels[r.status] || statusLabels.pending;
     const thumb = r.image_data ? `<img class="item-thumb" src="${r.image_data}" alt="Ảnh báo cáo">` : '';
+
+    let actions = '';
+    if (isAdmin && r.status === 'pending') {
+      actions = `<button class="btn btn-outline btn-sm" onclick="startReport(${r.id})">Bắt đầu xử lý</button>
+                 <button class="btn btn-gold btn-sm" onclick="completeReport(${r.id})">Hoàn thành</button>`;
+    } else if (isAdmin && r.status === 'in_progress') {
+      actions = `<button class="btn btn-gold btn-sm" onclick="completeReport(${r.id})">Hoàn thành</button>`;
+    }
 
     return `
       <div class="item-row">
@@ -108,17 +121,22 @@ function renderReports(rows) {
             ${r.completed_at ? ` · Hoàn thành: ${MH.formatDateTime(r.completed_at)}` : ''}
           </div>
           ${r.description ? `<div class="item-desc">${escapeHtml(r.description)}</div>` : ''}
-          <div class="mt-1"><span class="pill ${pillClass}">${pillLabel}</span></div>
+          <div class="mt-1"><span class="pill ${info.pill}">${info.label}</span></div>
         </div>
-        ${isAdmin && r.status === 'pending' ? `
-          <div class="item-actions">
-            <button class="btn btn-gold btn-sm" onclick="completeReport(${r.id})">Hoàn thành</button>
-          </div>
-        ` : ''}
+        ${actions ? `<div class="item-actions">${actions}</div>` : ''}
       </div>
     `;
   }).join('');
 }
+
+window.startReport = async (id) => {
+  try {
+    await MH.api(`/support/reports/${id}/start`, { method: 'PUT' });
+    loadReports();
+  } catch (err) {
+    alert(err.message);
+  }
+};
 
 window.completeReport = async (id) => {
   try {

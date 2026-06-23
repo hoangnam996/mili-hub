@@ -353,7 +353,7 @@ input:focus, select:focus, textarea:focus {
 }
 .pill-pending { background: #FBF0DC; color: #8A6116; border: 1px solid #E8CE9C; }
 .pill-completed, .pill-resolved, .pill-scored, .pill-sold { background: #E7EFE9; color: #3F6A53; border: 1px solid #BFD8C9; }
-.pill-available, .pill-open { background: #E5ECF6; color: #2E436B; border: 1px solid #C4D3EA; }
+.pill-available, .pill-open, .pill-progress { background: #E5ECF6; color: #2E436B; border: 1px solid #C4D3EA; }
 
 /* ===================== LIST ITEMS / TABLE ===================== */
 

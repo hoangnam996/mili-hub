@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS sos_reports (
     device VARCHAR(100) NOT NULL,     -- Thiết bị bị hỏng
     description TEXT,
     image_data TEXT,                  -- base64 ảnh (tuỳ chọn)
-    status VARCHAR(20) NOT NULL DEFAULT 'pending', -- 'pending' | 'completed'
+    status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'in_progress', 'completed')), -- 'pending' | 'in_progress' | 'completed'
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     completed_at TIMESTAMP
 );
