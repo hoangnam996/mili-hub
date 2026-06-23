@@ -6,10 +6,16 @@ const filterInput = document.getElementById('filter-company');
 const adminSection = document.getElementById('admin-section');
 const officerForm = document.getElementById('officer-form');
 const officerAlert = document.getElementById('officer-alert');
+const sectionTitle = document.getElementById('of-section-title');
+const submitBtn = document.getElementById('of-submit-btn');
+const cancelBtn = document.getElementById('of-cancel-btn');
 
 if (MH.isAdmin()) {
   adminSection.classList.remove('hidden');
 }
+
+let officersCache = [];
+let editingId = null;
 
 let debounceTimer;
 filterInput.addEventListener('input', () => {
@@ -23,6 +29,7 @@ async function loadOfficers() {
   try {
     const query = company ? `?company=${encodeURIComponent(company)}` : '';
     const officers = await MH.api(`/wiki/officers${query}`);
+    officersCache = officers;
     renderOfficers(officers);
   } catch (err) {
     listEl.innerHTML = `<div class="empty-state">${err.message}</div>`;
@@ -47,7 +54,10 @@ function renderOfficers(officers) {
         </div>
         ${o.note ? `<div class="item-desc">${escapeHtml(o.note)}</div>` : ''}
       </div>
-      ${MH.isAdmin() ? `<div class="item-actions"><button class="btn btn-danger btn-sm" data-id="${o.id}" onclick="deleteOfficer(${o.id})">Xoá</button></div>` : ''}
+      ${MH.isAdmin() ? `<div class="item-actions">
+        <button class="btn btn-outline btn-sm" data-id="${o.id}" onclick="editOfficer(${o.id})">Sửa</button>
+        <button class="btn btn-danger btn-sm" data-id="${o.id}" onclick="deleteOfficer(${o.id})">Xoá</button>
+      </div>` : ''}
     </div>
   `).join('');
 }
@@ -68,6 +78,38 @@ window.deleteOfficer = async (id) => {
   }
 };
 
+window.editOfficer = (id) => {
+  const officer = officersCache.find(o => o.id === id);
+  if (!officer) return;
+
+  document.getElementById('of-name').value = officer.full_name || '';
+  document.getElementById('of-position').value = officer.position || '';
+  document.getElementById('of-phone').value = officer.phone || '';
+  document.getElementById('of-company').value = officer.company || '';
+  document.getElementById('of-platoon').value = officer.platoon || '';
+  document.getElementById('of-building').value = officer.building || '';
+  document.getElementById('of-note').value = officer.note || '';
+
+  editingId = id;
+  sectionTitle.textContent = 'Sửa thông tin (Ban quản lý)';
+  submitBtn.textContent = 'Lưu thay đổi';
+  cancelBtn.classList.remove('hidden');
+  officerAlert.innerHTML = '';
+  officerForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+function resetFormToAddMode() {
+  editingId = null;
+  officerForm.reset();
+  sectionTitle.textContent = 'Thêm thông tin (Ban quản lý)';
+  submitBtn.textContent = 'Thêm vào danh bạ';
+  cancelBtn.classList.add('hidden');
+}
+
+if (cancelBtn) {
+  cancelBtn.addEventListener('click', resetFormToAddMode);
+}
+
 if (officerForm) {
   officerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -84,9 +126,15 @@ if (officerForm) {
     };
 
     try {
-      await MH.api('/wiki/officers', { method: 'POST', body: JSON.stringify(payload) });
-      officerForm.reset();
-      officerAlert.innerHTML = '<div class="alert alert-success">Đã thêm vào danh bạ.</div>';
+      if (editingId) {
+        await MH.api(`/wiki/officers/${editingId}`, { method: 'PUT', body: JSON.stringify(payload) });
+        officerAlert.innerHTML = '<div class="alert alert-success">Đã lưu thay đổi.</div>';
+        resetFormToAddMode();
+      } else {
+        await MH.api('/wiki/officers', { method: 'POST', body: JSON.stringify(payload) });
+        officerForm.reset();
+        officerAlert.innerHTML = '<div class="alert alert-success">Đã thêm vào danh bạ.</div>';
+      }
       loadOfficers();
     } catch (err) {
       officerAlert.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
