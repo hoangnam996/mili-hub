@@ -94,6 +94,26 @@ CREATE TABLE IF NOT EXISTS lost_found (
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+-- BUG-13: Index cho các cột thường dùng trong WHERE/JOIN/ORDER BY (tăng hiệu suất khi dữ liệu lớn)
+CREATE INDEX IF NOT EXISTS idx_inspections_user_id ON inspections(user_id);
+CREATE INDEX IF NOT EXISTS idx_inspections_status ON inspections(status);
+
+CREATE INDEX IF NOT EXISTS idx_sos_reports_user_id ON sos_reports(user_id);
+CREATE INDEX IF NOT EXISTS idx_sos_reports_status ON sos_reports(status);
+CREATE INDEX IF NOT EXISTS idx_sos_reports_user_status ON sos_reports(user_id, status);
+
+CREATE INDEX IF NOT EXISTS idx_duty_schedules_duty_date ON duty_schedules(duty_date);
+CREATE INDEX IF NOT EXISTS idx_duty_schedules_room_number ON duty_schedules(room_number);
+
+CREATE INDEX IF NOT EXISTS idx_market_listings_user_id ON market_listings(user_id);
+CREATE INDEX IF NOT EXISTS idx_market_listings_status ON market_listings(status);
+
+CREATE INDEX IF NOT EXISTS idx_lost_found_user_id ON lost_found(user_id);
+CREATE INDEX IF NOT EXISTS idx_lost_found_item_type ON lost_found(item_type);
+CREATE INDEX IF NOT EXISTS idx_lost_found_status ON lost_found(status);
+
+CREATE INDEX IF NOT EXISTS idx_officers_company ON officers(company);
+
 -- Tài khoản admin mẫu (mật khẩu: admin123 -> được tạo qua seed.js, không insert thẳng hash ở đây)
 
 -- Theo dõi lượt đăng nhập + thời gian hoạt động (phục vụ thống kê truy cập)
