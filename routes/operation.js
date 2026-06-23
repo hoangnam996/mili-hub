@@ -65,6 +65,12 @@ router.post('/inspections', requireAuth, async (req, res) => {
     if (!image_data) {
       return res.status(400).json({ error: 'Vui lòng chụp ảnh kiểm tra nội vụ.' });
     }
+    if (!image_data.startsWith('data:image/')) {
+      return res.status(400).json({ error: 'Dữ liệu ảnh không hợp lệ. Vui lòng chụp lại ảnh.' });
+    }
+    if (image_data.length > 14 * 1024 * 1024) {
+      return res.status(400).json({ error: 'Ảnh quá lớn (tối đa khoảng 10MB). Vui lòng chọn ảnh nhỏ hơn.' });
+    }
     const room = room_number || req.user.room_number;
     if (!room) {
       return res.status(400).json({ error: 'Tài khoản chưa có số phòng. Vui lòng cập nhật hồ sơ.' });
