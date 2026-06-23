@@ -11,11 +11,11 @@ router.get('/officers', requireAuth, async (req, res) => {
     let result;
     if (company) {
       result = await pool.query(
-        'SELECT * FROM officers WHERE company ILIKE $1 ORDER BY company, platoon, full_name',
+        'SELECT id, full_name, position, phone, company, platoon, building, note FROM officers WHERE company ILIKE $1 ORDER BY company, platoon, full_name',
         [`%${company}%`]
       );
     } else {
-      result = await pool.query('SELECT * FROM officers ORDER BY company, platoon, full_name');
+      result = await pool.query('SELECT id, full_name, position, phone, company, platoon, building, note FROM officers ORDER BY company, platoon, full_name');
     }
     res.json(result.rows);
   } catch (err) {
