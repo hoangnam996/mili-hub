@@ -33,9 +33,12 @@ function requireAuth(req, res, next) {
   }
 }
 
+// Danh sách role được coi là quản trị (dễ mở rộng thêm role mới sau này, ví dụ 'quan_ly', 'thi_dua')
+const ADMIN_ROLES = ['admin'];
+
 // Chỉ cho phép admin / ban quản lý / ban thi đua
 function requireAdmin(req, res, next) {
-  if (!req.user || req.user.role !== 'admin') {
+  if (!req.user || !ADMIN_ROLES.includes(req.user.role)) {
     return res.status(403).json({ error: 'Bạn không có quyền thực hiện hành động này.' });
   }
   next();
