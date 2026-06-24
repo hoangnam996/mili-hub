@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
     company VARCHAR(50),       -- Đại đội
     platoon VARCHAR(50),       -- Trung đội
     room_number VARCHAR(20),
-    phone VARCHAR(20),
+    phone VARCHAR(20) UNIQUE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

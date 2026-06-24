@@ -26,6 +26,11 @@ router.post('/register', async (req, res) => {
       return res.status(409).json({ error: 'Tên đăng nhập đã tồn tại.' });
     }
 
+    const existingPhone = await pool.query('SELECT id FROM users WHERE phone = $1', [phone]);
+    if (existingPhone.rows.length > 0) {
+      return res.status(409).json({ error: 'Số điện thoại này đã được đăng ký bởi tài khoản khác.' });
+    }
+
     const hash = await bcrypt.hash(password, 10);
     const result = await pool.query(
       `INSERT INTO users (username, password_hash, full_name, role, company, platoon, room_number, phone)
@@ -110,6 +115,13 @@ router.put('/profile', requireAuth, async (req, res) => {
 
     if (phone && !/^[0-9]{10}$/.test(phone)) {
       return res.status(400).json({ error: 'Số điện thoại phải gồm đúng 10 số.' });
+    }
+
+    if (phone) {
+      const existingPhone = await pool.query('SELECT id FROM users WHERE phone = $1 AND id != $2', [phone, req.user.id]);
+      if (existingPhone.rows.length > 0) {
+        return res.status(409).json({ error: 'Số điện thoại này đã được đăng ký bởi tài khoản khác.' });
+      }
     }
 
     const result = await pool.query(
