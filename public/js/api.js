@@ -34,7 +34,7 @@ const MH = {
 
     const res = await fetch(`/api${path}`, Object.assign({}, options, { headers }));
 
-    if (res.status === 401) {
+    if (res.status === 401 && token) {
       this.clearSession();
       window.location.href = '/index.html';
       throw new Error('Phiên đăng nhập đã hết hạn.');

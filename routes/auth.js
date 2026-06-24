@@ -137,4 +137,31 @@ router.put('/profile', requireAuth, async (req, res) => {
   }
 });
 
+// POST /api/auth/forgot-password - Đặt lại mật khẩu qua xác minh username + SĐT đã đăng ký
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { username, phone, new_password } = req.body;
+
+    if (!username || !phone || !new_password) {
+      return res.status(400).json({ error: 'Vui lòng nhập đầy đủ thông tin.' });
+    }
+    if (new_password.length < 6) {
+      return res.status(400).json({ error: 'Mật khẩu mới phải có ít nhất 6 ký tự.' });
+    }
+
+    const result = await pool.query('SELECT id, phone FROM users WHERE username = $1', [username]);
+    if (result.rows.length === 0 || result.rows[0].phone !== phone) {
+      return res.status(401).json({ error: 'Tên đăng nhập hoặc số điện thoại không đúng.' });
+    }
+
+    const newHash = await bcrypt.hash(new_password, 10);
+    await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newHash, result.rows[0].id]);
+
+    res.json({ message: 'Đã đặt lại mật khẩu thành công. Vui lòng đăng nhập lại.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi server khi đặt lại mật khẩu.' });
+  }
+});
+
 module.exports = router;
