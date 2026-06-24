@@ -18,7 +18,9 @@ router.get('/reports', requireAuth, async (req, res) => {
       if (status) { params.push(status); query += ` AND r.status = $${params.length}`; }
       query += ' ORDER BY r.created_at DESC';
     } else {
-      query = 'SELECT * FROM sos_reports WHERE user_id = $1 ORDER BY created_at DESC';
+      query = `SELECT r.*, u.full_name, u.username
+               FROM sos_reports r JOIN users u ON u.id = r.user_id
+               WHERE r.user_id = $1 ORDER BY r.created_at DESC`;
       params = [req.user.id];
     }
 
