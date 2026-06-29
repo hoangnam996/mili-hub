@@ -119,3 +119,24 @@ formForgot.addEventListener('submit', async (e) => {
     submitBtn.disabled = false;
   }
 });
+
+// ===== Đăng nhập demo (cho giáo viên/khách xem nhanh) =====
+const btnDemoStudent = document.getElementById('btn-demo-student');
+const btnDemoAdmin = document.getElementById('btn-demo-admin');
+
+async function loginDemo(username, password) {
+  clearAlert();
+  try {
+    const data = await MH.api('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password })
+    });
+    MH.setSession(data.token, data.user);
+    window.location.href = '/dashboard.html';
+  } catch (err) {
+    showAlert(err.message);
+  }
+}
+
+if (btnDemoStudent) btnDemoStudent.addEventListener('click', () => loginDemo('demo_student', 'demo123'));
+if (btnDemoAdmin) btnDemoAdmin.addEventListener('click', () => loginDemo('demo_admin', 'demo123'));

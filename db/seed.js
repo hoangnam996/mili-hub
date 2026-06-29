@@ -26,6 +26,33 @@ async function seed() {
       console.log('- Tài khoản admin đã tồn tại, bỏ qua.');
     }
 
+    // Tạo tài khoản demo cho giáo viên/khách xem nhanh (không cần đăng ký)
+    const demoStudentCheck = await pool.query("SELECT id FROM users WHERE username = 'demo_student'");
+    if (demoStudentCheck.rows.length === 0) {
+      const demoHash = await bcrypt.hash('demo123', 10);
+      await pool.query(
+        `INSERT INTO users (username, password_hash, full_name, role, company, platoon, room_number, phone)
+         VALUES ('demo_student', $1, 'Sinh Viên Demo', 'student', '1', '75DCTT21', 'A1-204', '0900000001')`,
+        [demoHash]
+      );
+      console.log('✔ Đã tạo tài khoản demo sinh viên -> username: demo_student / password: demo123');
+    } else {
+      console.log('- Tài khoản demo_student đã tồn tại, bỏ qua.');
+    }
+
+    const demoAdminCheck = await pool.query("SELECT id FROM users WHERE username = 'demo_admin'");
+    if (demoAdminCheck.rows.length === 0) {
+      const demoAdminHash = await bcrypt.hash('demo123', 10);
+      await pool.query(
+        `INSERT INTO users (username, password_hash, full_name, role, company, platoon, room_number, phone)
+         VALUES ('demo_admin', $1, 'Ban Quản Lý Demo', 'admin', NULL, NULL, NULL, '0900000002')`,
+        [demoAdminHash]
+      );
+      console.log('✔ Đã tạo tài khoản demo ban quản lý -> username: demo_admin / password: demo123');
+    } else {
+      console.log('- Tài khoản demo_admin đã tồn tại, bỏ qua.');
+    }
+
     // Thêm vài thông tin Ban chỉ huy mẫu nếu bảng officers còn rỗng
     const officerCheck = await pool.query('SELECT id FROM officers');
     if (officerCheck.rows.length === 0) {
