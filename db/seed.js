@@ -45,7 +45,7 @@ async function seed() {
       const demoAdminHash = await bcrypt.hash('demo123', 10);
       await pool.query(
         `INSERT INTO users (username, password_hash, full_name, role, company, platoon, room_number, phone)
-         VALUES ('demo_admin', $1, 'Ban Quản Lý Demo', 'admin', NULL, NULL, NULL, '0900000002')`,
+         VALUES ('demo_admin', $1, 'Ban Quản Lý KTX', 'admin', NULL, NULL, NULL, '0900000002')`,
         [demoAdminHash]
       );
       console.log('✔ Đã tạo tài khoản demo ban quản lý -> username: demo_admin / password: demo123');
